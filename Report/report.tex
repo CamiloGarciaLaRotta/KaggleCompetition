@@ -1,0 +1,90 @@
+\documentclass[10pt, hidelinks]{article}
+% Warn about obsolete LaTeX commands
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% Reduce size
+\pdfminorversion=5 
+\pdfcompresslevel=9
+\pdfobjcompresslevel=2
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts, mathtools}
+\usepackage{enumitem}  
+\usepackage{hyperref}
+\usepackage{listings}                   % insert code
+\usepackage{graphicx}                   % Insert images
+\graphicspath{ {./images/} }
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage[doublespacing]{setspace}
+
+\hypersetup {
+    colorlinks = true,
+    linkcolor = blue,
+}
+
+\begin{document}
+
+% Title Page
+\pagenumbering{gobble}
+
+%\maketitle
+% OR 
+% Custom title page 
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[width=0.15\textwidth]{McGillLogo.png}~\par\vspace{1cm}
+        {\scshape\LARGE McGill University \par}
+        \vspace{1cm}
+        {\scshape\Large COMP 551 - 001 \\ Applied Machine Learning\par}
+        \vspace{1.5cm}
+        {\huge\bfseries Kaggle Competition Report\par}
+        \vspace{2cm}
+        {\Large Garcia La Rotta, Camilo. \href{mailto:camilo.e.garcia@mail.mcgill.ca}{camilo.e.garcia@mail.mcgill.ca} (260657037)}\\
+        {\Large Schnaidman, Jacob. \href{mailto:YYYYY@mail.mcgill.ca}{YYYYY@mail.mcgill.ca} (XXXXX)}\\
+        {\Large Wiltzer, Harley. \href{mailto:harley.wiltzer@mail.mcgill.ca}{harley.wiltzer@mail.mcgill.ca} (260690006)}
+        \vfill
+        % Bottom of the page
+        {\large Group YYYYY\par}
+        \vfill
+        {\large \today\par}
+    \end{center}
+\end{titlepage}
+
+\newpage
+
+\section*{CONSTRAINTS (THIS IS NOT A SECTION)}
+The main text of the report should not exceed 6 pages.\\
+References and appendix can be in excess of the 6 pages.\\   
+The format should be doublecolumn, 10pt font, min. 1” margins.\\  
+You can use the standard IEEE conference format
+
+\section*{Introduction}
+Briefly describe the problem and summarize your approach and results.
+
+\section*{Feature Design}
+Describe and justify your pre-processing methods, and how you designed and selected your features.
+
+\section*{Algorithms}
+Give an overview of the learning algorithms used without going into too much detail in the class notes (e.g. SVM derivation, etc.), unless necessary to understand other details.
+
+\section*{Methodology}
+Include any decisions about training/validation split, distribution choice for na¨ıve bayes, regularization strategy, any optimization tricks, setting hyper-parameters, etc.
+
+\section*{Results}
+Present a detailed analysis of your results, including graphs and tables as appropriate. This analysis should be broader than just the Kaggle result: include a short comparison of the most important hyperparameters and all 3 methods you implemented.
+
+\section*{Discussion}
+Discuss the pros/cons of your approach & methodology and suggest areas of future work.
+
+\section*{Statement of Contributions}
+Briefly describe the contributions of each team member towards each of the components of the project (e.g. defining the problem, developing the methodology, coding the solution, performing
+the data analysis, writing the report, etc.) At the end of the Statement of Contributions, add the following statement: “We hereby state that all the work presented in this report is that of the authors.”
+
+\section*{References}
+(optional)
+
+\section*{Appendix}
+(optional).
+Here you can include additional results, more detail of the methods, etc. 
+
+\end{document}
