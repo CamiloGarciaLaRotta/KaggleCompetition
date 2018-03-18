@@ -206,24 +206,24 @@ class NeuralNetBuilder:
         self.layers[0] = InputLayer(height, 1)
         return self
 
-    def output_layer(self, height):
+    def output_layer(self, height, bias=True):
         if height == 1:
-            self.layers.append(SigmoidLayer(1,self.layers[-1].height))
+            self.layers.append(SigmoidLayer(1,self.layers[-1].height), bias)
             self.layers[-1].output = True
         else:
             self.layers.append(SoftMaxOutputLayer(height, self.layers[-1].height))
         return self
 
-    def add_layer(self, layer_type, height):
+    def add_layer(self, layer_type, height, bias=True):
         prev = self.layers[-1]
         if layer_type == "sigmoid":
-            self.layers.append(SigmoidLayer(height, prev.height))
+            self.layers.append(SigmoidLayer(height, prev.height, bias))
         elif layer_type == "tanh":
-            self.layers.append(HyperbolicTangentLayer(height, prev.height))
+            self.layers.append(HyperbolicTangentLayer(height, prev.height, bias))
         elif layer_type == "rectifier":
-            self.layers.append(SoftPlusRectifierLayer(height, prev.height))
+            self.layers.append(SoftPlusRectifierLayer(height, prev.height, bias))
         elif layer_type == "output":
-            self.layers.append(SoftMaxOutputLayer(height, prev.height))
+            self.layers.append(SoftMaxOutputLayer(height, prev.height, bias))
         else:
             raise Exception('Layer type "' + layer_type + '" not known')
         return self
