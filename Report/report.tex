@@ -67,6 +67,7 @@ This report discusses the applied methods and obtained results regarding the ima
 % Describe and justify your pre-processing methods, and how you designed and selected your features.
 
 We did not generate new features based on combinations of existent features, nor did we leveraged external data during the feature design/model selection/training process. Because he images we are working with are grey-scale, there is no use in applying dimensionality reduction techniques to the color channels: e.g. collapsing collapse the RGB channels into a single gray-scale channel.\\
+\noindent We leveraged OpenCV image transformation libraries to enhance the samples' features. To remove the background pattern we used a binary threshold filter. To remove the remaining noise from darker regions of the background pattern we dilated and eroded the black pixels. We also experimented with Gaussian and standard pixel blurring, but cross validation showed blurring reduced the model's capacity to correctly classify the samples. The visualization of the aformentioned transformations can be found in the Appendix, Figure~\ref{preprocessing}.\\
 \noindent For the linear learners, to reduce computational time and eliminate potentially irrelevant features, we performed PCA for the LR model. PCA reduces the number of interested dimensions in the data space, leaving those with maximal variance. We did use this technique for the SVM model because by definition it already perform feature selection.\\
 \noindent As for the NN, we leveraged OpenCV pytorch  .... \textbf{TODO}
 
@@ -120,7 +121,7 @@ All members helped writing the report. In broad terms, the focus of each student
 \begin{itemize}
     \item \textbf{Harley Wiltzer:} \textbf{TODO}
     \item \textbf{Jacob Schnaidman:} \textbf{TODO}
-    \item \textbf{Camilo Garcia La Rotta:} Linear Learners (Feature/Model selection, coding and analysis)
+    \item \textbf{Camilo Garcia La Rotta:} Image preprocessing, Linear Learners (Feature/Model selection, coding and analysis)
 \end{itemize}
 
 \textit{We hereby state that all the work presented in this report is that of the authors.}
@@ -128,8 +129,16 @@ All members helped writing the report. In broad terms, the focus of each student
 \section*{References (OPTIONAL)}
 % (optional)
 
-\section*{Appendix (OPTIONAL)}
+
+\section*{Appendix}
 % (optional)
 % Here you can include additional results, more detail of the methods, etc. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{preprocessing}
+    \caption{Image preprocessing with OpenCV}
+    \label{preprocessing}
+\end{figure}
 
 \end{document}
