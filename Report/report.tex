@@ -61,42 +61,110 @@ You can use the standard IEEE conference format
 \section*{Introduction}
 % Briefly describe the problem and summarize your approach and results.
 
-This report discusses the applied methods and obtained results regarding the image analysis Kaggle competition. The problem at hand was to automatically recognize randomly scaled hand-written digits. The input is a 64x64 grey-scale image and the output is the number corresponding to the digit with maximum area. To address this challenge, we performed supervised training through LinearSVMs (SVM), Logistic Regression (LR), Neural Networks (NN) and Convolutional Neural Networks (CNN). As it was expected, the performance of the linear learners was almost as bad as that of a random classifier. As for the hand-made NN, XXXXXXXX. Finally, the official results submitted to the Kaggle competition where those of the CNN which YYYYYYYY.
+This report discusses the applied methods and obtained results regarding the image analysis Kaggle
+competition. The problem at hand was to automatically recognize randomly scaled hand-written digits.
+The input is a 64x64 grey-scale image and the output is the number corresponding to the digit with
+maximum area. To address this challenge, we performed supervised training through LinearSVMs (SVM),
+Logistic Regression (LR), Neural Networks (NN) and Convolutional Neural Networks (CNN). The linear
+learners each achieved accuracies of approximately 60\%.
+As for the hand-made NN, results of about 65\% were observed, for networks of both one and two
+hidden layers. Finally, the official results submitted to the Kaggle competition
+where those of the CNN which XXXXX.
 
 \section*{Feature Design}
 % Describe and justify your pre-processing methods, and how you designed and selected your features.
 
-
-We did not generate new features based on combinations of existent features, nor did we leveraged external data during the feature design/model selection/training process. Because he images we are working with are grey-scale, there is no use in applying dimensionality reduction techniques to the color channels: e.g. collapsing collapse the RGB channels into a single gray-scale channel.\\
-\noindent We leveraged OpenCV image transformation libraries to enhance the samples' features. To remove the background pattern we used a binary threshold filter. To remove the remaining noise from darker regions of the background pattern we dilated and eroded the black pixels. We also experimented with Gaussian and standard pixel blurring, but cross validation showed blurring reduced the model's capacity to correctly classify the samples. To finalize preprocessing, we extracted the largest area contour into a new image and cropped it at 32X32, vastly reducing the input dimension and ensuring the only relevant information was the binary array representing the largest area digit. The visualization of the aforementioned transformations can be found in the Appendix, Figure~\ref{preprocessing}.\\
-\noindent Before training, the images binary values were transformed from (0,255) representing black and white to (1,0). Avoiding blurring the image allowed us to encode the image in this minimal format, allowing us to leverage sparse matrix representations.\\
+We did not generate new features based on combinations of existent features, nor did we leverage
+external data during the feature design/model selection/training process. Because he images we are
+working with are grayscale, there is no use in applying dimensionality reduction techniques to the
+color channels, such as collapsing collapse the RGB channels into a single gray-scale channel.\\
+\noindent OpenCV image transformation libraries were leveraged to enhance the samples' features. To
+remove the background pattern a binary threshold filter was used. To remove the remaining noise from
+darker regions of the background pattern we dilated and eroded the black pixels. We also
+experimented with Gaussian and standard pixel blurring, but cross validation showed blurring reduced
+the model's capacity to correctly classify the samples. To finalize preprocessing, we extracted the
+largest area contour into a new image and cropped it at 32X32, vastly reducing the input dimension
+and ensuring the only relevant information was the binary array representing the largest area digit.
+The visualization of the aforementioned transformations can be found in the Appendix,
+Figure~\ref{preprocessing}.\\
+\noindent Before training, the images binary values were transformed from (0,255) representing black
+and white to (1,0). This normalization proved to be effective at increasing the rate of convergence
+in some models.\\
 \noindent As for the NN, we leveraged OpenCV pytorch  .... \textbf{TODO}
 
 \section*{Algorithms}
 % Give an overview of the learning algorithms used without going into too much detail in the class notes (e.g. SVM derivation, etc.), unless necessary to understand other details.
 \subsection*{Linear SVM}
-Supervised classification algorithm, which inheritently performs feature selection by choosing the subset of featres with maximal variance. It handles multiclass classification through one-vs-rest scheme. Its tuned hyper-parameters are:
+Linear SVM was used as a supervised classification algorithm, which inherently performs feature selection by
+choosing the subset of features with maximal variance. It handles multiclass classification through
+the one-vs-rest scheme. Its tuned hyper-parameters are:
 \begin{itemize}
     \item The penalty which controls the penalization of the regularization and optimization problem norm.
     \item The dual/primal optimization problem. We have more samples than features, hence we prefer the dual.
-    \item The penalty parameter of the error term (c) which determines he influence of the miss-classification on the objective function. the larger C, the model will choose a smaller the hyper-plane margin if it means it can correctly classify more points. 
+	\item The penalty parameter of the error term (c) which determines he influence of the
+		miss-classification on the objective function. the larger C, the model will choose a smaller
+		the hyper-plane margin if it means it can correctly classify more points. 
 \end{itemize}
 \subsection*{Logistic Regression}
-Supervised algorithm which leverages the sigmoid function and one-vs-rest scheme to perform multiclass classification. Its tuned hyper-parameters are:
+Supervised algorithm which leverages the logistic sigmoid function and one-vs-rest scheme to perform
+multiclass classification. Its tuned hyper-parameters are:
 \begin{itemize}
     \item The penalty and dual/primal, C which serve the same purpose as for SVMs.
-    \item The solver, which is the algorithm used in the optimization problem. For multiclass problems we cross validated newton-cg, sag, saga and lbfgs.
+	\item The solver, which is the algorithm used in the optimization problem. For multiclass
+		problems we cross validated newton-cg, sag, saga and lbfgs.
 \end{itemize}
 \subsection*{Neural Network}
-Supervised classification algorithm. The two main processes are: Feed-Forward, where features are slided through layers of nodes fully connected to the previous layer each one containing a weight. At each layer an activation function is applied. Back-Propagation, which is implemented through the chain-rule to efficiently compute the gradients of the cost function with respect to the weight parameters of the network.
+The Neural Network is a supervised classification algorithm. The two main processes are
+Feed-Forward, where features are
+forwarded through layers of nodes fully connected to the previous layer each one containing a
+weight. For this reason, Neural Networks are called Multi-Layer Perceptrons, as each node updates
+its weight parameters based the error seen by the network.
+At each layer a nonlinear activation function is applied, allowing the model to learn arbitrarily
+nonlinear relationships from its training data. Next, Back-Propagation is used to adjust the weights
+of the network by leveraging dynamic programming to perform efficient chain rule computations.
 \subsection*{Convolutional Neural Network}
-A variant of NNs optimized for image analysis, CNNs reduce the connectivity of nodes to a local range (local connectivity), also constraining all nodes in a depth slice to the same weights (parameter sharing). These constraints vastly reduce the ressources required to learn distinct features of images.
+A variant of NNs optimized for image analysis, Convolutional Neural Networks (CNN) reduce the
+connectivity of nodes to a local range (local connectivity), also constraining all nodes in a depth
+slice to the same weights (parameter sharing). These constraints vastly reduce the resources
+required to learn distinct features of images, allowing for far better classification for a given
+amount of processing power and time.
 
 \section*{Methodology}
-% Include any decisions about training/validation split, distribution choice for na¨ıve bayes, regularization strategy, any optimization tricks, setting hyper-parameters, etc.
+% Include any decisions about training/validation split, distribution choice for na¨ıve bayes,
+% regularization strategy, any optimization tricks, setting hyper-parameters, etc.
 
-For all models, a very small subset of samples (100) was used to better understand the behaviour and performance improvements of every model through every logical permutation of hyper-parameters. The official model selection process was done through K-fold cross validation with 3 folds and the complete training data-set. As for the ranges of values used, we leveraged Numpy's logspace package, which generates an equally distant set of numbers between two specified boundaries in log-space.\\
-\noindent To visualize and understand the behaviour of each hyper-parameter on the performance of the SVM and LR models, we cross validated with every valid permutation. Note that for example that for SVM's the combination: DUAL, L1 penalty and Squared Hinge loss is invalid.
+%For all models, a very small subset of samples (100) was used to better understand the behaviour and
+%performance improvements of every model through every logical permutation of hyper-parameters. The
+%official model selection process was done through K-fold cross validation with 3 folds and the
+%complete training data-set. As for the ranges of values used, we leveraged Numpy's logspace package,
+%which generates an equally distant set of numbers between two specified boundaries in log-space.\\
+%\noindent To visualize and understand the behaviour of each hyper-parameter on the performance of
+%the SVM and LR models, we cross validated with every valid permutation. Note that for example that
+%for SVM's the combination: DUAL, L1 penalty and Squared Hinge loss is invalid.
+
+To commence the process, the models were run through small subsets of the data (5000 samples) in order to get a
+grasp of the optimal ranges of hyperparameters without sacrificing too much time. For the SVM
+classifier, for example, it was seen that the model performed best for penalty parameters in the
+range of $5*10^{-4}$ to $10^{-3}$. For Logistic Regression, each logical ordered set of
+hyperparameters from broad ranges were attempted. It was seen that the lbfgs solver was always vastly
+superior, and the penalty parameter allowed the model to perform best in the range of $5*10^{-3}$
+and $2*10^{-2}$. This allowed us to efficiently perform cross validation on a concentrated range of
+possibilities. For the linear learners, computation was fairly fast so we could afford to do 3-fold
+cross validation. It was seen that the best penalty parameter for SVM was $0.0009\overline{4}$, and
+for Logitic Regression the best penalty parameter was $0.01$. With these hyperparameters (and the
+lbfgs solver for Logistic Regression), the SVM Classifier and Logistic Regression Classifier scored
+accuracies of 60\% and 57\% respectively.\\\\
+For the fully-connected feed-forward neural network, there were an enormous amount of
+hyperparameters and the model was very slow to train. Once again, it was necessary to run the model
+on smaller datasets in order to gain an intuition of the ranges and possibilities of best
+performers. Due to the enormous amount of time spent on training, it was decided to limit the NN to
+at most two hidden layers. Furthermore, the amount of hidden units at each layer was another
+hyperparameter to tune. Furthermore, the \textit{layer types} had to be chosen, as they define the
+nonlinear activation function executed at each step. The logistic sigmoid, hyperbolic tangent,
+softplus rectifier, and ReLU activations were tested, but it was seen that for both the first and
+second hidden layers, the sigmoid and hyperbolic tangent activations performed much better. The
+final cross validation involved testing neural network architectures with one and two hidden layers
+in all permutations of logistic sigmoid and hyperbolic tangent layers.
 
 \noindent For LinearSVM .... (TALK ABOUT FINAL BEST HYPERPARMS)
 
