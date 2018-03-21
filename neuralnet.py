@@ -129,7 +129,8 @@ class SoftPlusRectifierLayer(NeuralNetLayer):
 
     def backpropagate(self, gamma, prop):
         sumcols = np.diag(np.sum(prop, axis=0))
-        partialgrad = sumcols.dot(np.diag(sigmoid(self.vals)))
+        deriv = sigmoid(self.vals)
+        partialgrad = sumcols.dot(np.diag(deriv))
         backprop = partialgrad.dot(self.weights)
         prev = np.tile(self.prevInput, (self.height, 1))
         self.weights -= np.multiply(gamma, partialgrad.dot(prev))
@@ -153,7 +154,7 @@ class NeuralNet:
         self.n_inputs = n_inputs
         self.n_classes = n_classes
 
-    def fit(self, x, y, gamma=1, epochs=1000, debug=False):
+    def fit(self, x, y, gamma=1, epochs=1000, debug=False, validation=None):
         (_, cols) = x.shape
         if not cols == self.n_inputs:
             raise Exception("Size mismatch: input layer takes " + str(self.height) + " inputs but data provides " + str(cols))
@@ -163,16 +164,25 @@ class NeuralNet:
         error = 0
         dataset = list(zip(x,y))
         errors = []
+        valids = []
         for e in range(epochs):
             error = 0
             for (data, label) in dataset:
                 out = self.forward(data)
                 error -= np.sum(label.T.dot(np.log(out)))
                 self.backpropagate(gamma, label)
+            if not (validation is None):
+                correct = 0
+                for (x,y) in validation:
+                    if self.predict(x) == y:
+                        correct += 1
+                valids.append(100.0 * float(correct)/len(validation))
             if debug:
                 print(str(e+1) + ". Error: " + str(error))
+                if not (validation is None):
+                    print("Validation accuracy: {:.4f}%".format(100.0 * float(correct)/len(validation)))
             errors.append(error)
-        return errors
+        return (errors, valids)
 
     def backpropagate(self, gamma, target):
         for layer in reversed(self.layers[1:]):
