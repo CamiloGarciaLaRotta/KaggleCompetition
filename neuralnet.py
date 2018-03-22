@@ -116,6 +116,30 @@ class HyperbolicTangentLayer(NeuralNetLayer):
             self.b -= np.multiply(gamma, deriv)
         return backprop
 
+class ReLULayer(NeuralNetLayer):
+    def __init__(self, height, prevHeight, bias=True):
+        NeuralNetLayer.__init__(self, height, prevHeight, bias)
+
+    def forward(self, x, b):
+        self.prevInput = x
+        preactivation = self.weights.dot(x) + np.multiply(b, self.b)
+        self.vals = np.maximum(preactivation,0,preactivation)
+        if b == 0:
+            self.has_bias = False
+        return self.vals
+
+    def backpropagate(self, gamma, prop):
+        sumcols = np.diag(np.sum(prop, axis=0))
+        deriv = self.vals.copy()
+        deriv[deriv > 0] = 1.0
+        partialgrad = sumcols.dot(np.diag(deriv))
+        backprop = partialgrad.dot(self.weights)
+        prev = np.tile(self.prevInput, (self.height, 1))
+        self.weights -= np.multiply(gamma, partialgrad.dot(prev))
+        if self.has_bias:
+            self.b -= np.multiply(gamma, deriv)
+        return backprop
+
 class SoftPlusRectifierLayer(NeuralNetLayer):
     def __init__(self, height, prevHeight, bias=True):
         NeuralNetLayer.__init__(self, height, prevHeight, bias)
